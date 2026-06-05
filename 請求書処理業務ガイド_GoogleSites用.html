@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>請求書処理・郵送業務ガイド</title>
+<style>
+:root{
+  --navy:#1a3a5c;--blue:#1a569c;--blue-mid:#2e74b5;
+  --blue-light:#deeaf1;--blue-pale:#f0f6fc;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-bd:#bbf7d0;
+  --red:#dc2626;--red-bg:#fef2f2;--red-bd:#fecaca;
+  --amber:#d97706;--amber-bg:#fffbeb;--amber-bd:#fde68a;
+  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+  --gray-600:#475569;--text:#1e293b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Sans','Meiryo','Yu Gothic',sans-serif;font-size:14px;line-height:1.8;color:var(--text);background:#fff;padding:0 0 60px}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 60%,var(--blue-mid) 100%);color:#fff;padding:36px 32px 28px;margin-bottom:8px}
+.hero-label{font-size:11px;letter-spacing:.1em;opacity:.65;margin-bottom:6px}
+.hero h1{font-size:22px;font-weight:700;line-height:1.35;margin-bottom:6px}
+.hero-meta{font-size:11.5px;opacity:.6;margin-top:10px}
+
+/* TOC */
+.toc{background:var(--blue-pale);border:1px solid var(--blue-light);border-radius:10px;padding:16px 20px;margin:20px 24px}
+.toc-title{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:8px;letter-spacing:.05em}
+.toc-list{list-style:none;display:flex;flex-direction:column;gap:3px}
+.toc-list a{font-size:13px;color:var(--blue-mid);text-decoration:none;padding:2px 0}
+.toc-list a:hover{text-decoration:underline}
+
+/* Content */
+.content{padding:0 24px}
+
+/* Chapter */
+.chapter{display:flex;align-items:center;gap:12px;margin:36px 0 16px;padding-bottom:10px;border-bottom:2px solid var(--blue-light)}
+.chapter-num{display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:var(--blue);color:#fff;border-radius:7px;font-size:13px;font-weight:700;flex-shrink:0}
+.chapter h2{font-size:18px;font-weight:700;color:var(--navy)}
+
+/* Subhead */
+.subhead{display:flex;align-items:center;gap:8px;margin:22px 0 10px;font-size:14px;font-weight:700;color:var(--blue-mid)}
+.subhead::before{content:'';display:block;width:4px;height:16px;background:var(--blue-mid);border-radius:2px;flex-shrink:0}
+.mini-head{font-size:13px;font-weight:700;color:var(--gray-600);margin:16px 0 8px}
+
+/* Boxes */
+.box{border-radius:9px;padding:14px 18px;margin:12px 0;border-left:4px solid}
+.box-title{font-size:13px;font-weight:700;margin-bottom:7px}
+.box-body{font-size:13px}
+.box-body p{margin-bottom:4px}
+.box-blue{background:var(--blue-pale);border-color:var(--blue)}
+.box-blue .box-title{color:var(--blue)}
+.box-green{background:var(--green-bg);border-color:var(--green)}
+.box-green .box-title{color:var(--green)}
+.box-red{background:var(--red-bg);border-color:var(--red)}
+.box-red .box-title{color:var(--red)}
+.box-amber{background:var(--amber-bg);border-color:var(--amber)}
+.box-amber .box-title{color:var(--amber)}
+
+/* Steps */
+.step-list{margin:10px 0 18px;display:flex;flex-direction:column;gap:5px}
+.step-item{display:grid;grid-template-columns:60px 1fr;border-radius:7px;overflow:hidden;border:1px solid var(--blue-light);font-size:13px}
+.step-label{background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;padding:10px 6px;text-align:center;line-height:1.3}
+.step-body{background:#fff;padding:11px 14px;line-height:1.7}
+.step-item:nth-child(even) .step-body{background:var(--blue-pale)}
+.step-note{font-size:12px;color:var(--gray-600);margin-top:4px;padding-top:4px;border-top:1px dashed var(--gray-200)}
+
+/* Checklist */
+.checklist{margin:10px 0 18px;display:flex;flex-direction:column;gap:4px}
+.check-item{display:grid;grid-template-columns:32px 1fr;align-items:stretch;border:1px solid var(--gray-200);border-radius:6px;overflow:hidden;font-size:13px}
+.check-box{background:var(--blue-pale);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--blue-mid);border-right:1px solid var(--blue-light)}
+.check-text{padding:9px 13px;background:#fff;line-height:1.6}
+.check-item:nth-child(even) .check-text{background:var(--gray-50)}
+
+/* NG Table */
+.ng-table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0 18px;border-radius:9px;overflow:hidden}
+.ng-table th{padding:9px 12px;background:var(--navy);color:#fff;font-weight:700;text-align:left;font-size:12px}
+.ng-table td{padding:10px 12px;vertical-align:top;border-bottom:1px solid var(--gray-200);line-height:1.6}
+.ng-table tr:last-child td{border-bottom:none}
+.ng-table .num{text-align:center;width:32px;background:var(--blue-pale);font-weight:700;color:var(--blue);font-size:12px}
+.ng-table .bad{background:#fff8f8}
+.ng-table .good{background:#f7fff8}
+
+/* Case Table */
+.case-table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0 18px;border-radius:9px;overflow:hidden}
+.case-table th{padding:9px 12px;background:var(--blue-mid);color:#fff;font-weight:700;text-align:left}
+.case-table td{padding:10px 12px;border-bottom:1px solid var(--gray-200);line-height:1.6;vertical-align:top}
+.case-table tr:last-child td{border-bottom:none}
+.case-table tr:nth-child(odd) td:first-child{background:var(--blue-pale)}
+.case-table tr:nth-child(even) td:first-child{background:#f8fbff}
+.case-table td:last-child{background:#fff}
+
+/* Folder tree */
+.folder-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.folder-tree{background:#1e293b;color:#e2e8f0;border-radius:9px;padding:14px 18px;font-size:12.5px;font-family:'Courier New',monospace;line-height:2}
+.folder-tree .fc{color:#93c5fd}
+.folder-tree .fn{color:#86efac;font-style:italic}
+.folder-tree .fa{color:#38bdf8}
+.folder-card{background:#fff;border:1px solid var(--blue-light);border-radius:9px;padding:12px 14px}
+.folder-card .fc-title{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:6px}
+
+/* Template box */
+.template-box{background:#1e293b;color:#f1f5f9;border-radius:9px;padding:16px 18px;font-size:13px;line-height:2;margin:10px 0;position:relative}
+.template-box::before{content:'コピペ用テンプレート';position:absolute;top:-10px;left:14px;background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:4px;letter-spacing:.05em}
+.template-box .ph{color:#fbbf24}
+
+/* Bullet list */
+.blist{list-style:none;padding:0;margin:8px 0 14px;display:flex;flex-direction:column;gap:4px}
+.blist li{padding-left:16px;position:relative;font-size:13px;line-height:1.7}
+.blist li::before{content:'・';position:absolute;left:0;color:var(--blue-mid);font-weight:700}
+
+/* Pills */
+.pill{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11.5px;font-weight:700;margin-right:4px}
+.pill-r{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.pill-g{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+
+.divider{height:1px;background:var(--gray-200);margin:28px 0}
+code{background:var(--gray-100);padding:1px 6px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">みらいメディカルグループ｜現場事務スタッフ向け</div>
+  <h1>請求書処理・郵送業務ガイド</h1>
+  <p style="opacity:.75;font-size:13px;margin-top:8px">「今日入職したあなたが、明日から迷わず動ける」ための業務マニュアルです。</p>
+  <div class="hero-meta">制定：2025年5月　Ver.1.0　　※気づきは積極的にフィードバックしてください。</div>
+</div>
+
+<div class="toc">
+  <div class="toc-title">📋 目次</div>
+  <ul class="toc-list">
+    <li><a href="#intro">はじめに・守るべき大原則</a></li>
+    <li><a href="#ch1">第1章｜請求書管理</a></li>
+    <li><a href="#ch2">第2章｜郵送・書類送付業務</a></li>
+    <li><a href="#ch3">第3章｜動画マニュアル・Q&A</a></li>
+    <li><a href="#ch4">第4章｜よくある場面と対応</a></li>
+    <li><a href="#ch5">第5章｜やってはいけないこと（NG一覧）</a></li>
+  </ul>
+</div>
+
+<div class="content">
+
+<!-- はじめに -->
+<section id="intro">
+  <div class="chapter">
+    <div class="chapter-num">⚑</div>
+    <h2>はじめに</h2>
+  </div>
+
+  <div class="box box-blue">
+    <div class="box-title">📋 このガイドの目的</div>
+    <div class="box-body">
+      <p><strong>今日入職したあなたでも、明日から迷わず動けるよう</strong>「何を・いつ・どうやって」をまとめました。</p>
+      <ul class="blist" style="margin-top:8px">
+        <li>「とりあえず本部へ郵送」による、郵送コスト・本部スタッフ労務・時間のトリプルコストがかかっていた</li>
+        <li>支払いの遅延が発生し、督促の連絡が来ることが度々あった</li>
+        <li>請求書の送付もれ・紛失時に、どこで問題が起きたかわかりにくかった</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box box-green">
+    <div class="box-title">🎯 目指す姿</div>
+    <div class="box-body">「このガイドを見れば、その日から業務の8割ができる」状態を全員で作り上げます。口頭での引き継ぎに頼らず、マニュアル・動画・チェックリストで仕事を回す仕組みです。</div>
+  </div>
+
+  <div class="subhead">あなたに求めること</div>
+  <ul class="blist">
+    <li>分からないことは口頭で聞く前に、まずこのガイドを確認する</li>
+    <li>ガイドに書いていないことがあれば、上長に確認後、追記する</li>
+    <li>「この説明では分かりにくかった」という気づきを積極的に伝え、修正に貢献する</li>
+    <li>イレギュラーな方法は取らない。必ず決められたルートで提出・報告する</li>
+  </ul>
+
+  <div class="box box-red">
+    <div class="box-title">⚠️ 必ず守る大原則</div>
+    <div class="box-body">
+      <p><span class="pill pill-r">❌ NG</span> LINE WORKSへの請求書添付・やり取りは<strong>禁止</strong>です。</p>
+      <p style="margin-bottom:10px"><span class="pill pill-g">✅ OK</span> すべての請求書は <strong>Googleドライブの指定フォルダへアップロード</strong>してください。</p>
+      <p><span class="pill pill-r">❌ NG</span> 「とりあえず何でも本部に郵送する」は時間とコストの二重のムダ。<strong>禁止</strong>です。</p>
+      <p style="margin-bottom:10px"><span class="pill pill-g">✅ OK</span> 郵送先仕分け一覧を確認してから、適切な送り先へ直接発送してください。</p>
+      <p>⚠️ マニュアル外のルートで提出されたものは、<strong>本部から差し戻し</strong>となります。</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 第1章 -->
+<section id="ch1">
+  <div class="chapter">
+    <div class="chapter-num">1</div>
+    <h2>請求書管理</h2>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-title">📌 鉄則</div>
+    <div class="box-body"><strong>請求書は「来た日にアップロード」が原則です。溜め込まず、その日のうちに処理してください。</strong></div>
+  </div>
+
+  <div class="subhead">基本ルール（請求書が届いたら）</div>
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-label">STEP<br>1</div>
+      <div class="step-body"><strong>その日に</strong>Googleドライブの指定フォルダへアップロードする<div class="step-note">→ アップロード日と担当者サインを書類の右上に記載</div></div>
+    </div>
+    <div class="step-item">
+      <div class="step-label">STEP<br>2</div>
+      <div class="step-body">支払期限を必ず確認する（該当箇所にチェック✔または蛍光ペンを入れる）</div>
+    </div>
+    <div class="step-item">
+      <div class="step-label">STEP<br>3</div>
+      <div class="step-body">期限が<strong>1週間以内</strong>のものは、アップロードと同時に上長・経理へ<strong>即日報告</strong>する</div>
+    </div>
+    <div class="step-item">
+      <div class="step-label">STEP<br>4</div>
+      <div class="step-body">締め作業時、売上報告と合わせて「請求書アップロード完了」をLINE WORKSの「売上報告」スレッドで報告する</div>
+    </div>
+    <div class="step-item">
+      <div class="step-label">STEP<br>5</div>
+      <div class="step-body">請求書原本は月末に取りまとめ、<strong>月初に指定の会計士事務所へ郵送</strong>する</div>
+    </div>
+  </div>
+
+  <div class="mini-head">📋 LINE WORKS 売上報告テンプレート</div>
+  <div class="template-box">
+    お疲れ様です。MMC<span class="ph">◯◯</span>院<span class="ph">◯</span>月<span class="ph">◯</span>日の売上報告となります。<br>
+    請求書<span class="ph">◯</span>件アップロードしております。<br>
+    １週間以内の支払いはございません。<em style="color:#94a3b8;font-size:11.5px">※ある場合は「◯件ございます」に変更</em><br>
+    ご確認のほどお願い申し上げます。【<span class="ph">報告者名</span>】
+  </div>
+
+  <div class="subhead">Googleドライブ　フォルダ構成ルール</div>
+  <div class="folder-grid">
+    <div class="folder-card">
+      <div class="fc-title">🗂 変更前（旧ルール）</div>
+      <div class="folder-tree">
+        <span class="fc">師友堂</span><br>
+        &nbsp;<span class="fa">↪</span> <span class="fc">MMC豊橋</span><br>
+        &nbsp;&nbsp;<span class="fa">↪</span> <span class="fc">MMC豊橋2026.5.20</span><br>
+        &nbsp;&nbsp;&nbsp;<span class="fa">↪</span> 請求書業者名
+      </div>
+    </div>
+    <div class="folder-card">
+      <div class="fc-title">🗂 変更後（新ルール）</div>
+      <div class="folder-tree">
+        <span class="fc">師友堂</span><br>
+        &nbsp;<span class="fa">↪</span> <span class="fc">MMC豊橋</span><br>
+        &nbsp;&nbsp;<span class="fa">↪</span> <span class="fc">2026.05.20 未来花子</span> <span class="fn">← 担当者名</span><br>
+        &nbsp;&nbsp;&nbsp;<span class="fa">↪</span> 請求書業者
+      </div>
+    </div>
+  </div>
+  <ul class="blist">
+    <li>必ず<strong>日付を先頭</strong>に付ける（<code>yyyy.mm.dd</code> 形式）</li>
+    <li>隆和会MMC赤羽院は、現行のルールを継続してください</li>
+  </ul>
+
+  <div class="subhead">特殊ケースの取り扱い</div>
+  <table class="case-table">
+    <thead><tr><th style="width:44%">状況</th><th>対応方法</th></tr></thead>
+    <tbody>
+      <tr><td>ペイジーマーク（Pay-easy）・eLマークがある支払伝票</td><td><strong>アップロードのみでOK</strong>＝小口払い不要・原本郵送も不要</td></tr>
+      <tr><td>支払伝票が同封されている請求書（振込先記載あり）</td><td><strong>アップロードのみでOK</strong>（原本郵送は不要）</td></tr>
+      <tr><td>アスクルなど、購入明細が複数ページにまたがるもの</td><td>全ページをまとめてアップロードする</td></tr>
+      <tr><td>アップロード漏れが後から発覚した場合</td><td>過去フォルダに遡らず、<strong>報告した日付のフォルダにアップロード</strong>し上長へ報告</td></tr>
+    </tbody>
+  </table>
+
+  <div class="subhead">支払期限チェックのポイント</div>
+  <ul class="blist">
+    <li>支払期限が「1週間以内」のもの → <strong>即日報告！（放置厳禁）</strong></li>
+    <li>入金漏れの連絡があった際は、まずドライブで請求書の有無を確認してから本部へ入金依頼する</li>
+  </ul>
+
+  <div class="subhead">毎月の定期チェックリスト</div>
+  <div class="checklist">
+    <div class="check-item"><div class="check-box">□</div><div class="check-text">今月分の請求書がすべて届いているか（「来ていない請求書」がないか）</div></div>
+    <div class="check-item"><div class="check-box">□</div><div class="check-text">すべての請求書がGoogleドライブにアップロードされているか</div></div>
+    <div class="check-item"><div class="check-box">□</div><div class="check-text">メールで届く請求書・サイトからダウンロードすべき請求書は処理できたか</div></div>
+    <div class="check-item"><div class="check-box">□</div><div class="check-text">提出期限・支払い期限が迫っているものがないか</div></div>
+    <div class="check-item"><div class="check-box">□</div><div class="check-text">アップロード日付のエビデンスが残っているか（請求書右上に日付印と担当者印）</div></div>
+    <div class="check-item"><div class="check-box">□</div><div class="check-text">請求書原本を月末に取りまとめ、月初に指定会計事務所へ郵送できているか</div></div>
+  </div>
+
+  <div class="subhead">書類スキャン時のポイント</div>
+  <p style="font-size:13px;margin-bottom:8px">スマホのカメラ（Adobe Scanなど）または複合機のスキャン機能を使用。アップロード前に必ず確認してください。</p>
+  <ul class="blist">
+    <li>① 向きが揃っているか（縦横の混在に注意）</li>
+    <li>② スキャンミスで見切れていないか</li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
+<!-- 第2章 -->
+<section id="ch2">
+  <div class="chapter">
+    <div class="chapter-num">2</div>
+    <h2>郵送・書類送付業務</h2>
+  </div>
+
+  <div class="box box-blue">
+    <div class="box-title">📦 原則</div>
+    <div class="box-body"><strong>「本部を経由する」郵送は廃止。</strong>各院から直接、送り先へ発送してください。<br>→ 郵送代・本部スタッフ労務・時間の<strong>トリプルコスト</strong>を節約できます。</div>
+  </div>
+
+  <div class="subhead">郵送の判断フロー</div>
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-label">STEP<br>1</div>
+      <div class="step-body"><strong>原本が必要か？</strong><div class="step-note">→ スキャンでOKなものなら Googleドライブへ直接アップロードして完了</div></div>
+    </div>
+    <div class="step-item">
+      <div class="step-label">STEP<br>2</div>
+      <div class="step-body">原本が必要な場合 → <strong>「郵送先仕分け一覧表」</strong>で送り先を確認する</div>
+    </div>
+    <div class="step-item">
+      <div class="step-label">STEP<br>3</div>
+      <div class="step-body">確認した送り先へ、各院から直接発送する<div class="step-note">→ 不明なものは本部へ確認してから発送</div></div>
+    </div>
+    <div class="step-item">
+      <div class="step-label">STEP<br>4</div>
+      <div class="step-body">「<strong>親展</strong>」と記載のあるものは秘匿性が高い<div class="step-note">→ 開封せず本人宛に送付。または指示があれば代理開封してアップロード</div></div>
+    </div>
+  </div>
+
+  <div class="subhead">郵送先仕分け一覧表の活用</div>
+  <ul class="blist">
+    <li>各院の事務スペースに<strong>「郵送先仕分け一覧表」</strong>を作成・掲示する</li>
+    <li>発送前に必ず一覧表で郵送先・時期を確認し、正しい送り先へ直接送付する</li>
+    <li>一覧表にない郵便物は「売上報告」スレッドで本部へ確認してから発送する</li>
+  </ul>
+  <div class="box box-amber" style="margin-top:6px">
+    <div class="box-title">🔒 個人情報の管理</div>
+    <div class="box-body">本郵送先一覧には個人情報が含まれます。不特定多数の目に触れる場所での掲示は避け、業務上必要なスタッフのみがアクセスできるよう管理を徹底してください。</div>
+  </div>
+
+  <div class="subhead">デジタル書類のアップロード手順</div>
+  <ul class="blist">
+    <li>捺印が必要な契約書も、<strong>デジタル共有を先行</strong>してから郵送先を確認する</li>
+    <li>アップロード先：Googleドライブの<strong>緑色の指定フォルダ</strong>（「MMC◯◯本部提出用（請求書以外）」）</li>
+    <li>スキャン後は ① 向きが揃っているか　② 見切れていないか を確認してからアップロード</li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
+<!-- 第3章 -->
+<section id="ch3">
+  <div class="chapter">
+    <div class="chapter-num">3</div>
+    <h2>動画マニュアル・Q&amp;Aの活用（今後導入予定）</h2>
+  </div>
+
+  <p style="font-size:13px;margin-bottom:12px">「<strong>分からなければまず見る</strong>」。動画マニュアルはそのために作られています。</p>
+
+  <div class="subhead">動画マニュアルの使い方</div>
+  <ul class="blist">
+    <li>LINE WORKSの「◯◯マニュアル」フォルダを確認する</li>
+    <li>操作手順や梱包作業など、実際の作業を映した動画が保存されています</li>
+    <li>まず動画を確認し、それでも分からなければ上長へ相談する</li>
+  </ul>
+
+  <div class="subhead">Q&amp;A蓄積にご協力ください</div>
+  <div class="step-list">
+    <div class="step-item"><div class="step-label">①</div><div class="step-body">「これどうしますか？」と聞く前に、まずこのガイドを確認する</div></div>
+    <div class="step-item"><div class="step-label">②</div><div class="step-body">ガイドに書いていなければ、上長へ確認する</div></div>
+    <div class="step-item"><div class="step-label">③</div><div class="step-body">上長からの回答は「ガイドのここに追記した」と確認する</div></div>
+    <div class="step-item"><div class="step-label">④</div><div class="step-body">分かりにくい説明を見つけたら、積極的にフィードバックする</div></div>
+  </div>
+
+  <div class="subhead">退職・引き継ぎ時のお願い</div>
+  <ul class="blist">
+    <li>後任への引き継ぎは「口頭」ではなく、「<strong>ガイドの更新</strong>」で行う</li>
+    <li>「自分が間違えた箇所」「分かりにくかった記述」を必ずガイドに追記・修正する</li>
+    <li>動画が古くなっている場合は、スマホで再撮影して差し替える（1分程度でOK）</li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
+<!-- 第4章 -->
+<section id="ch4">
+  <div class="chapter">
+    <div class="chapter-num">4</div>
+    <h2>よくある場面と対応</h2>
+  </div>
+
+  <div class="subhead">場面1：業者から入金漏れの連絡があった</div>
+  <div class="checklist">
+    <div class="check-item"><div class="check-box">□</div><div class="check-text">Googleドライブで該当の請求書がアップロードされているか確認する</div></div>
+    <div class="check-item"><div class="check-box">□</div><div class="check-text">アップロードされている場合 → 本部へ入金依頼する（アップサロード日も共有）</div></div>
+    <div class="check-item"><div class="check-box">□</div><div class="check-text">アップロードされていない場合 → 請求書を探す。見つからなければ本部に報告し、再発行依頼をかける</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- 第5章 -->
+<section id="ch5">
+  <div class="chapter">
+    <div class="chapter-num">5</div>
+    <h2>やってはいけないこと（NG一覧）</h2>
+  </div>
+
+  <p style="font-size:13px;margin-bottom:12px">以下の行動はグループ全体のコスト増大・ミスにつながります。必ず守ってください。</p>
+
+  <table class="ng-table">
+    <thead>
+      <tr><th style="width:32px;text-align:center">#</th><th style="width:46%">❌ NG行動</th><th>✅ 正しい行動</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1</td><td class="bad">LINE WORKSのスレッドで請求書を添付・やり取りする</td><td class="good">Googleドライブの指定フォルダへアップロードする</td></tr>
+      <tr><td class="num">2</td><td class="bad">請求書を「とりあえず本部へ」郵送する</td><td class="good">郵送先一覧表で確認し、各院から直接送付する</td></tr>
+      <tr><td class="num">3</td><td class="bad">書類をまとめて後からアップロードする</td><td class="good">請求書が届いた日にアップロードする</td></tr>
+      <tr><td class="num">4</td><td class="bad">口頭で業務を引き継ぐ</td><td class="good">ガイドを更新し、後任はガイドを見て覚える</td></tr>
+      <tr><td class="num">5</td><td class="bad">分からないことをすぐ口頭で聞く</td><td class="good">まずガイド・動画を確認してから質問する</td></tr>
+      <tr><td class="num">6</td><td class="bad">マニュアル外のルートで書類を提出する</td><td class="good">必ずガイド通りのルートで提出する（差し戻し対象）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box box-green" style="margin-top:24px">
+    <div class="box-title">📝 このガイドへのフィードバックについて</div>
+    <div class="box-body">
+      <p>ご意見・分かりにくい点は本部までお知らせください。</p>
+      <p>問題が起きるたびにこのガイドをアップデートし、より良いガイドを作り上げましょう。あなたの忌憚ないフィードバックがガイドの改善につながります！</p>
+    </div>
+  </div>
+</section>
+
+</div><!-- /content -->
+</body>
+</html>
